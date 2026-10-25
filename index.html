@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#1f4e78">
+<title>Controle de Manutenção Hospitalar</title>
+<link rel="manifest" href="manifest.webmanifest">
+<style>
+:root{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:#18212b;background:#f4f7fa}
+*{box-sizing:border-box}body{margin:0}header{background:#1f4e78;color:white;padding:18px 16px}header h1{font-size:1.25rem;margin:0 0 5px}header p{margin:0;font-size:.92rem;opacity:.92}
+main{max-width:850px;margin:auto;padding:14px;display:grid;gap:14px}.card{background:white;border:1px solid #d6e0e9;border-radius:14px;padding:15px;box-shadow:0 1px 3px #1020300b}
+h2{font-size:1.05rem;margin:0 0 12px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.wide{grid-column:1/-1}label{display:block;font-size:.88rem;font-weight:600;margin-bottom:5px}input,select,textarea,button{font:inherit}input,select,textarea{width:100%;padding:11px;border:1px solid #bccbd8;border-radius:9px;background:white;color:#17212b;min-height:44px}textarea{resize:vertical}button{border:0;border-radius:9px;padding:11px 13px;min-height:44px;font-weight:650;cursor:pointer}.primary{background:#1f4e78;color:white}.secondary{background:#e7eef5;color:#193d5c}.danger{background:#fff0f0;color:#8b2020}.actions{display:flex;gap:8px;flex-wrap:wrap}.actions button{flex:1}.hint,.muted{color:#596b7b;font-size:.88rem}.status{min-height:1.3em;color:#245b32;font-size:.9rem}.summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.stat{background:#edf3f8;border-radius:10px;padding:10px}.stat span{display:block;color:#526477;font-size:.8rem}.stat strong{font-size:1.08rem;overflow-wrap:anywhere}.record{border-top:1px solid #e0e7ed;padding:12px 0}.record:first-child{border-top:0}.recordtop{display:flex;justify-content:space-between;gap:10px}.record h3{font-size:1rem;margin:0 0 4px}.record p{margin:4px 0;font-size:.9rem;overflow-wrap:anywhere}.tag{display:inline-block;background:#e8f0f7;padding:3px 7px;border-radius:6px;font-size:.78rem;margin:2px 3px 2px 0}.smallbtn{min-height:36px;padding:7px 10px;font-size:.85rem}.hidden{display:none!important}
+@media(max-width:480px){.grid{grid-template-columns:1fr}.wide{grid-column:auto}.summary{grid-template-columns:1fr 1fr}.summary .stat:last-child{grid-column:1/-1}header{padding:15px}}
+</style>
+</head>
+<body>
+<header><h1>Controle de Manutenção Hospitalar</h1><p>Registre por ambiente, mesmo sem internet, e consulte os totais.</p></header>
+<main>
+<section class="card">
+<h2>1. Dados da manutenção</h2>
+<div class="grid">
+<div><label for="date">Data</label><input id="date" type="date"></div>
+<div><label for="sector">Setor / andar</label><input id="sector" placeholder="Ex.: 3º andar / Enfermaria"></div>
+<div class="wide"><label for="room">Ambiente</label><input id="room" placeholder="Ex.: Enfermaria 35" value="Enfermaria 35"></div>
+<div class="wide"><label for="service">Serviço realizado (opcional)</label><textarea id="service" rows="2" placeholder="Ex.: reparos gerais no quarto"></textarea></div>
+</div>
+</section>
+<section class="card">
+<h2>2. Material utilizado</h2>
+<div class="grid">
+<div class="wide"><label for="material">Material / descrição</label><input id="material" placeholder="Ex.: Lâmpada LED 24 W de sobrepor"></div>
+<div><label for="qty">Quantidade</label><input id="qty" type="number" min="0.01" step="any" placeholder="1"></div>
+<div><label for="unit">Unidade</label><select id="unit"><option>Unidade</option><option>Peça</option><option>Metro</option><option>Metro quadrado</option><option>Litro</option><option>Quilo</option><option>Pacote</option><option>Caixa</option><option>Outro</option></select></div>
+<div><label for="price">Valor unitário (R$), opcional</label><input id="price" type="number" min="0" step="0.01" placeholder="0,00"></div>
+<div><label for="note">Observação (opcional)</label><input id="note" placeholder="Marca, modelo, detalhe"></div>
+<div class="wide"><button id="add" class="primary" type="button">+ Salvar material neste ambiente</button><p id="msg" class="status" aria-live="polite"></p></div>
+</div>
+<p class="hint">Cada material salvo vira um registro ligado à data e ao ambiente preenchidos acima. Os dados ficam guardados neste navegador neste aparelho.</p>
+</section>
+<section class="card">
+<h2>3. Resumo dos registros</h2>
+<div class="summary">
+<div class="stat"><span>Registros</span><strong id="count">0</strong></div>
+<div class="stat"><span>Quantidade somada*</span><strong id="quantity">0</strong></div>
+<div class="stat"><span>Custo com preço informado</span><strong id="cost">R$ 0,00</strong></div>
+</div>
+<p class="hint">*Soma simples das quantidades registradas; unidades diferentes não devem ser comparadas como se fossem iguais.</p>
+<div class="grid">
+<div><label for="filterDate">Filtrar por data</label><input id="filterDate" type="date"></div>
+<div><label for="filterRoom">Filtrar por ambiente</label><input id="filterRoom" placeholder="Ex.: Enfermaria 35"></div>
+<div class="wide"><label for="filterMaterial">Filtrar por material</label><input id="filterMaterial" placeholder="Ex.: lâmpada, tomada..."></div>
+</div>
+<div id="records" aria-live="polite" style="margin-top:10px"></div>
+</section>
+<section class="card">
+<h2>4. Backup e exportação</h2>
+<p class="hint">Faça backup regularmente para não perder os registros se limpar os dados do navegador ou trocar de celular.</p>
+<div class="actions">
+<button id="csv" class="secondary" type="button">Exportar CSV</button>
+<button id="backup" class="secondary" type="button">Baixar backup JSON</button>
+</div>
+<div style="margin-top:10px"><label for="restore">Restaurar backup JSON</label><input id="restore" type="file" accept=".json,application/json"></div>
+<div class="actions" style="margin-top:10px">
+<button id="install" class="primary hidden" type="button">Instalar aplicativo</button>
+<button id="clear" class="danger" type="button">Apagar todos os registros</button>
+</div>
+<p id="backupMsg" class="status" aria-live="polite"></p>
+</section>
+<section class="card">
+<h2>Como instalar no Android</h2>
+<ol style="padding-left:20px;margin-bottom:8px">
+<li>Os arquivos deste pacote precisam ser publicados em um endereço HTTPS para permitir instalação como aplicativo e atualização offline.</li>
+<li>Depois de publicado, abra o endereço no Chrome do celular e escolha <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.</li>
+<li>Abra o aplicativo ao menos uma vez com internet antes de usá-lo offline.</li>
+</ol>
+<p class="hint">Esta versão armazena os registros localmente no navegador do aparelho. Ela não sincroniza automaticamente entre celulares ou com um computador. Use o backup JSON para guardar uma cópia.</p>
+</section>
+</main>
+<script>
+(function(){
+const $=id=>document.getElementById(id);
+const KEY='controleHospitalManutencao_v1';
+let data=[];
+try{data=JSON.parse(localStorage.getItem(KEY)||'[]');if(!Array.isArray(data))data=[];}catch(e){data=[]}
+const today=new Date();$('date').value=[today.getFullYear(),String(today.getMonth()+1).padStart(2,'0'),String(today.getDate()).padStart(2,'0')].join('-');
+function save(){try{localStorage.setItem(KEY,JSON.stringify(data));return true}catch(e){$('msg').textContent='Não foi possível gravar no aparelho. Exporte um backup e libere espaço.';return false}}
+function money(n){return n.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}
+function escapeText(s){return String(s??'')}
+function filtered(){let d=$('filterDate').value,r=$('filterRoom').value.trim().toLocaleLowerCase('pt-BR'),m=$('filterMaterial').value.trim().toLocaleLowerCase('pt-BR');return data.map((x,i)=>({...x,_i:i})).filter(x=>(!d||x.date===d)&&(!r||x.room.toLocaleLowerCase('pt-BR').includes(r))&&(!m||x.material.toLocaleLowerCase('pt-BR').includes(m))).sort((a,b)=>b.date.localeCompare(a.date)||b.created-a.created)}
+function render(){const list=$('records');list.replaceChildren();const rows=filtered();$('count').textContent=rows.length;$('quantity').textContent=rows.reduce((s,x)=>s+Number(x.qty||0),0).toLocaleString('pt-BR');$('cost').textContent=money(rows.reduce((s,x)=>s+(x.price===null?0:Number(x.qty)*Number(x.price)),0));if(!rows.length){const p=document.createElement('p');p.className='muted';p.textContent=data.length?'Nenhum registro corresponde aos filtros.':'Ainda não há materiais registrados.';list.append(p);return}rows.forEach(x=>{const box=document.createElement('article');box.className='record';const top=document.createElement('div');top.className='recordtop';const left=document.createElement('div');left.style.minWidth='0';const h=document.createElement('h3');h.textContent=x.material;const p=document.createElement('p');p.textContent=`${x.date.split('-').reverse().join('/')} · ${x.room}${x.sector?' · '+x.sector:''}`;const tags=document.createElement('div');const t1=document.createElement('span');t1.className='tag';t1.textContent=`${x.qty} ${x.unit}`;tags.append(t1);if(x.price!==null){const t2=document.createElement('span');t2.className='tag';t2.textContent='Total: '+money(Number(x.qty)*Number(x.price));tags.append(t2)}left.append(h,p,tags);if(x.service){const s=document.createElement('p');s.textContent='Serviço: '+x.service;left.append(s)}if(x.note){const n=document.createElement('p');n.textContent='Obs.: '+x.note;left.append(n)}const del=document.createElement('button');del.className='danger smallbtn';del.type='button';del.textContent='Excluir';del.addEventListener('click',()=>{if(confirm('Excluir este registro de material?')){data.splice(x._i,1);save();render()}});top.append(left,del);box.append(top);list.append(box)})}
+$('add').addEventListener('click',()=>{const material=$('material').value.trim(),qty=Number($('qty').value),priceText=$('price').value,price=priceText===''?null:Number(priceText),room=$('room').value.trim(),date=$('date').value;if(!date||!room||!material){$('msg').textContent='Preencha data, ambiente e nome do material.';return}if(!Number.isFinite(qty)||qty<=0){$('msg').textContent='Informe uma quantidade maior que zero.';return}if(price!==null&&(!Number.isFinite(price)||price<0)){$('msg').textContent='O valor unitário deve ser zero ou maior.';return}data.push({id:Date.now().toString(36)+Math.random().toString(36).slice(2,7),date,sector:$('sector').value.trim(),room,service:$('service').value.trim(),material,qty,unit:$('unit').value,price,note:$('note').value.trim(),created:Date.now()});if(save()){$('msg').textContent='Material salvo neste aparelho.';$('material').value='';$('qty').value='';$('price').value='';$('note').value='';render();$('material').focus()}});
+['filterDate','filterRoom','filterMaterial'].forEach(id=>$(id).addEventListener('input',render));
+function download(name,content,type){const blob=new Blob([content],{type}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}
+$('backup').addEventListener('click',()=>{download('backup-manutencao-hospitalar.json',JSON.stringify({version:1,exportedAt:new Date().toISOString(),records:data},null,2),'application/json');$('backupMsg').textContent='Backup JSON gerado. Guarde o arquivo em local seguro.'});
+$('csv').addEventListener('click',()=>{const cols=['Data','Setor/andar','Ambiente','Serviço','Material','Quantidade','Unidade','Valor unitário (R$)','Custo total (R$)','Observações'];const q=v=>'"'+String(v??'').replace(/"/g,'""')+'"';const lines=[cols.map(q).join(';'),...filtered().map(x=>[x.date,x.sector,x.room,x.service,x.material,x.qty,x.unit,x.price??'',x.price===null?'':(Number(x.qty)*Number(x.price)).toFixed(2).replace('.',','),x.note].map(q).join(';'))];download('consumo-manutencao-hospitalar.csv','\ufeff'+lines.join('\r\n'),'text/csv;charset=utf-8');$('backupMsg').textContent='CSV exportado com os registros que correspondem aos filtros atuais.'});
+$('restore').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;try{const obj=JSON.parse(await f.text()),incoming=Array.isArray(obj)?obj:obj.records;if(!Array.isArray(incoming))throw Error('formato');if(!confirm(`Importar ${incoming.length} registros? Eles serão adicionados aos registros atuais.`))return;const known=new Set(data.map(x=>x.id));incoming.forEach((x,i)=>{if(x&&x.material&&x.room&&x.date){const copy={...x,id:x.id||('import-'+Date.now()+'-'+i)};if(known.has(copy.id))copy.id+='-'+Math.random().toString(36).slice(2,6);data.push(copy)}});save();render();$('backupMsg').textContent='Backup importado. Confira os registros.'}catch(err){$('backupMsg').textContent='Não consegui ler esse backup. Selecione um JSON exportado por este aplicativo.'}finally{e.target.value=''}});
+$('clear').addEventListener('click',()=>{if(confirm('Tem certeza de que deseja apagar TODOS os registros salvos neste navegador? Faça backup antes.')){data=[];save();render();$('backupMsg').textContent='Registros apagados deste navegador.'}});
+let promptEvent=null;$('install').addEventListener('click',async()=>{if(promptEvent){promptEvent.prompt();await promptEvent.userChoice;promptEvent=null;$('install').classList.add('hidden')}else alert('No Chrome, abra o menu ⋮ e escolha “Instalar app” ou “Adicionar à tela inicial”.')});
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptEvent=e;$('install').classList.remove('hidden')});
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+render();
+})();
+</script>
+</body></html>

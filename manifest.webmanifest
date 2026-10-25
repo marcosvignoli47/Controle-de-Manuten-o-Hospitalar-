@@ -1,0 +1,11 @@
+{
+  "name": "Controle de Manutenção Hospitalar",
+  "short_name": "Manutenção",
+  "description": "Registro offline de materiais por ambiente hospitalar",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#f4f7fa",
+  "theme_color": "#1f4e78",
+  "icons": []
+}

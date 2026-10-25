@@ -1,0 +1,18 @@
+CONTROLE DE MANUTENÇÃO HOSPITALAR — PROTÓTIPO OFFLINE
+
+Arquivos:
+- index.html: aplicativo
+- manifest.webmanifest: configuração de instalação
+- sw.js: cache offline
+
+O QUE FAZ
+- Cadastro de materiais por data, setor e ambiente
+- Quantidade, unidade, valor unitário opcional e custo calculado
+- Busca/filtros por data, ambiente e material
+- Registros guardados localmente no navegador
+- Exportação CSV e backup/restauração JSON
+- Service worker para abrir offline após o primeiro carregamento online
+
+IMPORTANTE
+Para instalar como PWA no Android e ativar o cache offline, publique estes arquivos num endereço HTTPS. Um caminho gratuito comum é GitHub Pages, mas exige criar uma conta/repositório e publicar os arquivos. Depois, abra o endereço no Chrome, carregue o app uma vez online e use “Instalar app” ou “Adicionar à tela inicial”.
+Este protótipo não sincroniza entre aparelhos. Os dados ficam no armazenamento local do navegador e podem ser perdidos se os dados do site forem apagados. Use regularmente “Baixar backup JSON”.
