@@ -29,7 +29,72 @@ h2{font-size:1.05rem;margin:0 0 12px}.grid{display:grid;grid-template-columns:1f
 <section class="card">
 <h2>2. Material utilizado</h2>
 <div class="grid">
-<div class="wide"><label for="material">Material / descrição</label><input id="material" placeholder="Ex.: Lâmpada LED 24 W de sobrepor"></div>
+<div class="wide"><label for="material">Material / descrição</label><input id="material" list="materiais-sugeridos" placeholder="Digite ou escolha um material"><datalist id="materiais-sugeridos">
+<option value="Lâmpada LED 24 W de sobrepor"></option>
+<option value="Lâmpada LED 9 W"></option>
+<option value="Lâmpada tubular LED"></option>
+<option value="Reator para lâmpada"></option>
+<option value="Interruptor simples"></option>
+<option value="Interruptor paralelo"></option>
+<option value="Tomada 10 A"></option>
+<option value="Tomada 20 A"></option>
+<option value="Espelho para tomada/interruptor"></option>
+<option value="Disjuntor"></option>
+<option value="Fio elétrico 1,5 mm²"></option>
+<option value="Fio elétrico 2,5 mm²"></option>
+<option value="Fio elétrico 4 mm²"></option>
+<option value="Fita isolante"></option>
+<option value="Canaleta elétrica"></option>
+<option value="Plugue elétrico"></option>
+<option value="Extensão elétrica"></option>
+<option value="Resistência de chuveiro"></option>
+<option value="Chuveiro elétrico"></option>
+<option value="Torneira de lavatório"></option>
+<option value="Torneira de pia"></option>
+<option value="Sifão para lavatório/pia"></option>
+<option value="Válvula para lavatório"></option>
+<option value="Engate flexível"></option>
+<option value="Reparo para torneira"></option>
+<option value="Reparo para descarga"></option>
+<option value="Mecanismo de caixa acoplada"></option>
+<option value="Assento sanitário"></option>
+<option value="Ralo para banheiro"></option>
+<option value="Grelha para ralo"></option>
+<option value="Tubo PVC"></option>
+<option value="Conexão PVC (joelho/luva/te) "></option>
+<option value="Fita veda-rosca"></option>
+<option value="Registro hidráulico"></option>
+<option value="Tinta acrílica"></option>
+<option value="Massa corrida"></option>
+<option value="Massa acrílica"></option>
+<option value="Lixa para parede/madeira"></option>
+<option value="Rolo para pintura"></option>
+<option value="Pincel para pintura"></option>
+<option value="Selador para parede"></option>
+<option value="Silicone vedante"></option>
+<option value="Cola para PVC"></option>
+<option value="Argamassa"></option>
+<option value="Rejunte"></option>
+<option value="Piso cerâmico"></option>
+<option value="Parafuso"></option>
+<option value="Bucha para parede"></option>
+<option value="Prego"></option>
+<option value="Dobradiça para porta"></option>
+<option value="Fechadura para porta"></option>
+<option value="Maçaneta/maçaneta de porta"></option>
+<option value="Trinco para porta"></option>
+<option value="Puxador para porta"></option>
+<option value="Cadeado"></option>
+<option value="Silicone para vedação"></option>
+<option value="Espuma expansiva"></option>
+<option value="Abraçadeira plástica (enforca-gato)"></option>
+<option value="Fita dupla face"></option>
+<option value="Pilha"></option>
+<option value="Bateria"></option>
+<option value="Filtro para ar-condicionado"></option>
+<option value="Controle remoto para ar-condicionado"></option>
+<option value="Parafuso e bucha para fixação"></option>
+</datalist></div>
 <div><label for="qty">Quantidade</label><input id="qty" type="number" min="0.01" step="any" placeholder="1"></div>
 <div><label for="unit">Unidade</label><select id="unit"><option>Unidade</option><option>Peça</option><option>Metro</option><option>Metro quadrado</option><option>Litro</option><option>Quilo</option><option>Pacote</option><option>Caixa</option><option>Outro</option></select></div>
 <div><label for="price">Valor unitário (R$), opcional</label><input id="price" type="number" min="0" step="0.01" placeholder="0,00"></div>
